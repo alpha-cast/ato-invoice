@@ -1,0 +1,100 @@
+
+[editable-textarea] {
+  white-space: pre;
+}
+
+.contact-details > * {
+  margin-bottom: 5px;
+}
+
+.contact-details .contact-label {
+  font-weight: bold;
+}
+
+address {
+  font-style: italic;
+}
+
+.invoice-details td {
+  padding: 10px 10px 0 0;
+}
+
+/* Collapse columns to their minimum width without wrapping any text. */
+td.min-width, th.min-width {
+  width: 1px;
+  white-space: nowrap;
+}
+
+table.billable-items th {
+  padding-right: 10px;
+}
+
+table.billable-items {
+  margin-bottom: 0;
+}
+
+table.table.payment-summary td, table.table.payment-details td {
+  border-top: none;
+}
+
+table.table.payment-details td {
+  padding: 2px;
+}
+
+table.payment-summary td:first-child {
+  text-align: right;
+}
+
+/* xeditable CSS. Theirs changes a lot of stuff it shouldn't. All I really want
+it to do is allow things to be edited, not restyle them. */
+.editable-hide
+{
+  display:none!important
+}
+
+button.btn {
+  display: none;
+}
+
+.show-hidden button.btn {
+  display: initial;
+}
+
+@media screen {
+  body > div.container {
+    background: white;
+    box-sizing: border-box;
+    height: 297mm;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 20mm;
+    width: 210mm;
+    box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+  }
+
+  body {
+    background: #999;
+    cursor: default;
+    overflow: auto;
+    padding: 20mm;
+  }
+
+  .editable-click:hover {
+    text-shadow: 0 0 0.2em skyblue;
+  }
+
+  .show-hidden .editable-empty:after {
+    font-weight: lighter;
+    font-style: italic;
+    color: lightgray;
+    content: "Empty";
+  }
+
+  .show-hidden .editable-click {
+    box-shadow: 0 0 20px skyblue;
+  }
+}
+
+@media print {
+  margin: 20mm;
+}

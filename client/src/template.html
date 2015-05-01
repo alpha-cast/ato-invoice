@@ -4,145 +4,177 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoice Template</title>
+    <title>Tax Invoice</title>
 
-    <link href="css/invoice.css" rel="stylesheet">
-    <link href="css/xeditable.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="code/invoice.css" rel="stylesheet">
 
-    <!-- Bootstrap -->
-    <link href="bootstrap-3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <script src="angular/angular.min.js"></script>
-    <script src="js/xeditable.min.js"></script>
-    <script src="js/invoicer.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="bower_components/angularLocalStorage/src/angularLocalStorage.js"></script>
+    <script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
+    <script src="code/invoicer.js"></script>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
-  <body ng-controller="invController">
+  <body ng-controller="invController" ng-keydown="checkModDown($event)" ng-keyup="checkModUp($event)" ng-class="show_hidden">
     <div class="container ng-hide" ng-show="contentLoaded">
+      <div class="row">
+
+        <div class="col-xs-12 page-header">
+          <div class="col-xs-6">
+              <h1><span editable-text="invoice.from.company" buttons="no" title="Issuer entity name">{{invoice.from.company}}</span><br>
+              <small><span editable-text="invoice.bill_type" buttons="no" title="Bill type">{{invoice.bill_type}}</span></small></h1>
+          </div>
+          <div class="col-xs-6 contact-details my-details">
+            <address>
+              <div editable-textarea="invoice.from.address" buttons="no" title="Issuer address">{{invoice.from.address}}</div>
+            </address>
+            <div editable-text="invoice.from.phone" buttons="no" title="Issuer phone">{{invoice.from.phone}}</div>
+            <div editable-text="invoice.from.email" buttons="no"title="Issuer email">{{invoice.from.email}}</div>
+            <div title="Issuer ABN"><span class="contact-label">ABN</span>: <span editable-text="invoice.from.abn" buttons="no">{{invoice.from.abn || "ABN"}}</span></div>
+          </div>
+        </div>
+
         <div class="row">
-            <div class="col-xs-12 page-header">
-                <div class="col-xs-6">
-                    <h1><span editable-text="invoice.from_company">{{invoice.from_company || 'Company Name'}}</span><br>
-                    <small><span editable-text="invoice.bill_type">{{invoice.bill_type || 'Bill Type'}}</span></small></h1>
-                </div>
-                <div class="col-xs-6">
-                <address>
-                    <span editable-text="invoice.from_address">{{invoice.from_address || 'Address'}}</span><br>
-                    <span editable-text="invoice.from_city">{{invoice.from_city || 'City'}}</span>, <span editable-text="invoice.from_state">{{invoice.from_state || 'State'}}</span> <span editable-text="invoice.from_zip">{{invoice.from_zip || 'Zip'}}</span><br>
-                    <strong>P</strong>: <span editable-text="invoice.from_phone">{{invoice.from_phone || 'Phone'}}</span><br>
-                    <span editable-text="invoice.from_email">{{invoice.from_email || 'some@email.com'}}</span>
-                </address>
-                </div>
-            </div>
+          <div class="col-xs-6 contact-details client-details">
+            <h4>To: <span editable-text="invoice.to.company" buttons="no">{{invoice.to.company}}</span></h4>
+            <address>
+              <div editable-textarea="invoice.to.address" buttons="no" title="Receiver address">{{invoice.to.address}}</div>
+            </address>
+            <div editable-text="invoice.to.phone" buttons="no" title="Receiver phone">{{invoice.to.phone}}</div>
+            <div editable-text="invoice.to.email" buttons="no" title="Receiver email">{{invoice.to.email}}</div>
+            <div title="Receiver ABN"><span class="contact-label">ABN</span>: <span editable-text="invoice.to.abn" buttons="no">{{invoice.to.abn || "ABN"}}</span></div>
+          </div>
+          <div class="col-xs-6 invoice-details">
+            <table>
+              <tbody>
+                <tr title="Invoice identifier">
+                  <td class="h4">Invoice</td>
+                  <td class="h5"><span editable-text="invoice.id" buttons="no">{{invoice.id}}</span></td>
+                </tr>
+                <tr title="Date of issue">
+                  <td class="h5">Date</td>
+                  <td class="h5"><span editable-text="invoice.send_date" buttons="no">{{invoice.send_date}}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <hr>
+
         <div class="row">
-            <div class="col-xs-6">
-                <h4>Client:</h4>
-                <address>
-                    <strong><span editable-text="invoice.to_company">{{invoice.to_company || 'Client'}}</span></strong><br>
-                    <span editable-text="invoice.to_address">{{invoice.to_address || 'Address'}}</span><br>
-                    <span editable-text="invoice.to_city">{{invoice.to_city || 'City'}}</span>, <span editable-text="invoice.to_state">{{invoice.to_state || 'State'}}</span> <span editable-text="invoice.to_zip">{{invoice.to_zip || 'Zip'}}</span><br>
-                    <strong>P</strong>: <span editable-text="invoice.to_phone">{{invoice.to_phone || 'Phone'}}</span><br>
-                    <span editable-text="invoice.to_email">{{invoice.to_email || 'some@email.com'}}</span>
-                </address>
-            </div>
-            <div class="col-xs-6">
-                <table class="table-reduce-padding">
-                    <tbody>
-                        <tr>
-                            <td><p class="h4">Invoice #: </p></td>
-                            <td><p class="h5"><strong><span editable-text="invoice.number">{{invoice.number || '####'}}</span></strong></p></td>
-                        </tr>
-                        <tr>
-                            <td><p class="h5">Date: </p></td>
-                            <td><p class="h5"><strong><span editable-text="invoice.send_date">{{invoice.send_date || 'January 01, 2014'}}</span></strong></p></td>
-                        </tr>
-                        <tr>
-                            <td><p class="h5">Due Date: </p></td>
-                            <td><p class="h5"><strong><span editable-text="invoice.due_date">{{invoice.due_date || 'January 15, 2014'}}</span></strong></p></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div> 
+          <div class="col-xs-12">
+            <table class="table table-condensed table-striped billable-items">
+              <thead>
+                <tr>
+                  <th class="min-width">Item</th>
+                  <th>Task</th>
+                  <th class="min-width">Quantity</th>
+                  <th class="min-width">Unit Price<div class="sub-heading">(Ex GST)</div></th>
+                  <th class="min-width">Sub Total<div class="sub-heading">(Ex GST)</div></th>
+                  <th class="min-width">GST</th>
+                  <th class="min-width">Amount Payable<div class="sub-heading">(Incl GST)</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in invoice.line_items">
+                  <td class="min-width">
+                    {{$index+1}}
+                    <div class="hidden-print">
+                      <button type="button"
+                              class="btn btn-danger glyphicon glyphicon-minus btn-xs hidden-print"
+                              ng-click="invoice.remove_item_at($index)"></button>
+                    </div>
+                  </td>
+                  <td>
+                    <div title="Title"><strong editable-text="item.title" buttons="no">{{item.title}}</strong></div>
+                    <div title="Project"><em editable-text="item.project" buttons="no">{{item.project}}</em></div>
+                    <div title="Description" editable-text="item.desc" buttons="no">{{item.desc}}</div>
+                  </td>
+                  <td class="min-width">
+                    <span editable-text="invoice.line_items[$index].quantity" buttons="no">
+                      {{item.quantity}}
+                    </span>
+                  </td>
+                  <td class="min-width">
+                    $<span editable-text="invoice.line_items[$index].unit_price" buttons="no">
+                    {{item.unit_price}}
+                    </span>
+                  </td>
+                  <td class="min-width">${{item.sub_total()}}</td>
+                  <td class="min-width">
+                    <div editable-select="item.gst" e-ng-options="o.value as o.text for o in gst_options" buttons="no">
+                      ${{item.sub_total_gst()}}
+                    </div>
+                  </td>
+                  <td class="min-width">${{item.total()}}</td>
+                </tr>
+              </tbody>
+              <tfoot class="subtotal">
+                <tr>
+                  <td>
+                    <div class="hidden-print">
+                      <button type="button"
+                              class="btn btn-primary glyphicon glyphicon-plus btn-xs"
+                              ng-click="invoice.add_item()"></button>
+                    </div>
+                  </td>
+                  <td><strong>Totals</strong></td>
+                  <td colspan="2"></td>
+                  <td><strong>${{ invoice.sum_sub_totals() }}</strong></td>
+                  <td><strong>${{ invoice.sum_gst() }}</strong></td>
+                  <td><strong>${{ invoice.sum_total() }}</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <hr>
+
         <div class="row">
-            <div class="col-xs-12 box">
-                <table class="table table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Task</th>
-                            <th>Hours</th>
-                            <th>Rate</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="item in invoice.line_items">
-                            <td>{{$index+1}}</td>
-                            <td>
-                                <dl>
-                                    <dt><span editable-text="invoice.line_items[$index].title">{{item.title || 'Task Title'}}</span></dt>
-                                    <dd><span editable-text="invoice.line_items[$index].desc">{{item.desc || "Description goes here"}}</span></dd>
-                                </dl>
-                            </td>
-                            <td><span editable-text="invoice.line_items[$index].hours" e-style="width: 50px">{{item.hours || '0'}}</span></td>
-                            <td>$<span editable-text="invoice.line_items[$index].unit_price" e-style="width: 50px">{{item.unit_price || '100'}}</span></td>
-                            <td>${{item.hours*item.unit_price}}</td>
-                        </tr>
-                        <tr id="dynamicInsert" class="warning" ng-show="invoice.temp.title">
-                            <td>{{invoice.line_items.length + 1}}</td>
-                            <td>
-                                <dl>
-                                    <dt>{{invoice.temp.title}}</dt>
-                                    <dd>{{invoice.temp.desc}}</dd>
-                                </dl>
-                            </td>
-                            <td>{{invoice.temp.hours}}</td>
-                            <td>${{invoice.temp.unit_price}}</td>
-                            <td>${{invoice.temp.hours * invoice.temp.unit_price}}</td>
-                        </tr>
-                    </tbody>
-                    <tfoot class="subtotal">
-                        <tr>
-                            <td colspan=3></td>
-                            <td><p class="h5">Subtotal: </p></td>
-                            <td><p class="h5"><strong>${{ getSubTotal() }}</strong></p></td>
-                        </tr>
-                        <tr>
-                            <td colspan=3></td>
-                            <td><p class="h5">Deposit: </p></td>
-                            <td><p class="h5"><strong><span editable-text="invoice.client_deposit" e-style="width: 50px">${{invoice.client_deposit || '0'}}</span></strong></p></td>
-                        </tr>
-                        <tr>
-                            <td colspan=3></td>
-                            <td><p class="h5">Total: </p></td>
-                            <td><p class="h5"><strong>${{ getSubTotal() - invoice.client_deposit }}</strong></p></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+          <div class="col-xs-6">
+            <table class="table table-condensed payment-details">
+              <tr>
+                <td colspan="2">Please pay via bank deposit to</td>
+              </tr>
+              <tr title="Bank account name">
+                <td class="min-width"><strong editable-text="invoice.pay_to.name">{{ invoice.pay_to.name }}</strong></td>
+                <td></td>
+              </tr>
+              <tr title="Bank account BSB">
+                <td class="min-width"><strong editable-text="invoice.pay_to.bsb">{{ invoice.pay_to.bsb }}</strong></td>
+                <td>BSB</td>
+              </tr>
+              <tr title="Bank account number">
+                <td class="min-width"><strong editable-text="invoice.pay_to.account">{{ invoice.pay_to.account }}</strong></td>
+                <td>Account</td>
+              </tr>
+              <tr title="Invoice reference for payer to put in transaction description">
+                <td class="min-width"><strong>{{ invoice.id }}</strong></td>
+                <td>Description</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-xs-6">
+            <table class="table table-condensed payment-summary">
+              <tr title="Total amount payable by receiver, excluding GST">
+                <td>Total (excl GST)</td>
+                <td>${{ invoice.sum_sub_totals() }}</td>
+              </tr>
+              <tr title="Amount of GST payable by receiver">
+                <td>Total GST</td>
+                <td>${{ invoice.sum_gst() }}</td>
+              </tr>
+              <tr title="Total amount payable by receiver">
+                <td><strong>Total Amount Payable (incl GST)</strong></td>
+                <td><strong>${{ invoice.sum_total() }}</strong></td>
+              </tr>
+            </table>
+          </div>
         </div>
-        <div class="col-xs-6">
-            <p>Your business is greatly appreciated!</p>
-        </div>
-        <div class="col-xs-6">
-            <p class="h3 text-right">
-                Balance Due: ${{ getSubTotal() - invoice.client_deposit }}
-            </p>
-        </div>
-        <div class="editContainer" ng-mouseenter="showEditor=true" ng-mouseleave="showEditor=false">
-            <div ng-show="showEditor" ng-include src="'editor.html'"></div>
-        </div>
+      </div>
     </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bootstrap-3.1.1/js/bootstrap.min.js"></script>
   </body>
 </html>
