@@ -5,7 +5,7 @@ Australian Invoices
 
 Generates valid ATO invoices using an editable HTML template.
 
-[View the demo.](https://alpha-cast.github.io/ato-invoice/)
+[View the demo.](http://franklin-ross.github.io/ato-invoice/)
 
 Press `CTRL` to show all editable fields, and to get access to hidden edit controls for adding and removing line items. Also shows editable fields which have been collapsed because they have no content.
 
